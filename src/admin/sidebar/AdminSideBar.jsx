@@ -14,6 +14,7 @@ import {
   GlobeLock,
   Puzzle,
 } from 'lucide-react'; // Icons from lucide-react
+import { Link } from 'react-router-dom';
 
 const AdminSidebar = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -37,15 +38,15 @@ const AdminSidebar = () => {
           <h2 className="text-sm font-bold px-4 uppercase text-gray-400 mb-2">
             General
           </h2>
-          <a
-            href={'/admin/dashboard'}
+          <Link
+            to={'/admin/dashboard'}
             className={`block py-2 px-4 rounded-lg hover:bg-gray-700`}
           >
             <span className="flex items-center gap-2">
               <LayoutDashboard className="w-5 h-5" />
               Dashboard
             </span>
-          </a>
+          </Link>
           {/* Products */}
           <div>
             <button
@@ -76,36 +77,36 @@ const AdminSidebar = () => {
             {openDropdown === 'Products' && (
               <ul className="mt-2 pl-6 space-y-2 text-sm">
                 <li>
-                  <a
-                    href="/admin/product-list"
+                  <Link
+                    to="/admin/product-list"
                     className="block hover:text-orange-500"
                   >
                     List
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/product-details"
+                  <Link
+                    to="/admin/product-details"
                     className="block hover:text-orange-500"
                   >
                     Details
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/product-edit"
+                  <Link
+                    to="/admin/product-edit"
                     className="block hover:text-orange-500"
                   >
                     Edit
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/product-add"
+                  <Link
+                    to="/admin/product-add"
                     className="block hover:text-orange-500"
                   >
                     Create
-                  </a>
+                  </Link>
                 </li>
               </ul>
             )}
@@ -140,28 +141,28 @@ const AdminSidebar = () => {
             {openDropdown === 'Category' && (
               <ul className="mt-2 pl-6 space-y-2 text-sm">
                 <li>
-                  <a
-                    href="/admin/category-list"
+                  <Link
+                    to="/admin/category-list"
                     className="block hover:text-orange-500"
                   >
                     List
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/category-edit"
+                  <Link
+                    to="/admin/category-edit"
                     className="block hover:text-orange-500"
                   >
                     Edit
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/category-add"
+                  <Link
+                    to="/admin/category-add"
                     className="block hover:text-orange-500"
                   >
                     Create
-                  </a>
+                  </Link>
                 </li>
               </ul>
             )}
@@ -196,20 +197,20 @@ const AdminSidebar = () => {
             {openDropdown === 'Inventory' && (
               <ul className="mt-2 pl-6 space-y-2 text-sm">
                 <li>
-                  <a
-                    href="/admin/inventory-warehouse"
+                  <Link
+                    to="/admin/inventory-warehouse"
                     className="block hover:text-orange-500"
                   >
                     Warehouse
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/inventory-received-orders"
+                  <Link
+                    to="/admin/inventory-received-orders"
                     className="block hover:text-orange-500"
                   >
                     Received Orders
-                  </a>
+                  </Link>
                 </li>
               </ul>
             )}
@@ -244,20 +245,20 @@ const AdminSidebar = () => {
             {openDropdown === 'Orders' && (
               <ul className="mt-2 pl-6 space-y-2 text-sm">
                 <li>
-                  <a
-                    href="/admin/orders-list"
+                  <Link
+                    to="/admin/orders-list"
                     className="block hover:text-orange-500"
                   >
                     List
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/orders-details"
+                  <Link
+                    to="/admin/orders-details"
                     className="block hover:text-orange-500"
                   >
                     Details
-                  </a>
+                  </Link>
                 </li>
               </ul>
             )}
@@ -292,28 +293,28 @@ const AdminSidebar = () => {
             {openDropdown === 'Purchases' && (
               <ul className="mt-2 pl-6 space-y-2 text-sm">
                 <li>
-                  <a
-                    href="/admin/purchase-list"
+                  <Link
+                    to="/admin/purchase-list"
                     className="block hover:text-orange-500"
                   >
                     List
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/purchase-order"
+                  <Link
+                    to="/admin/purchase-order"
                     className="block hover:text-orange-500"
                   >
                     Order
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/purchase-return"
+                  <Link
+                    to="/admin/purchase-return"
                     className="block hover:text-orange-500"
                   >
                     Return
-                  </a>
+                  </Link>
                 </li>
               </ul>
             )}
@@ -348,57 +349,57 @@ const AdminSidebar = () => {
             {openDropdown === 'Invoices' && (
               <ul className="mt-2 pl-6 space-y-2 text-sm">
                 <li>
-                  <a
-                    href="/admin/invoice-list"
+                  <Link
+                    to="/admin/invoice-list"
                     className="block hover:text-orange-500"
                   >
                     List
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/invoice-details"
+                  <Link
+                    to="/admin/invoice-details"
                     className="block hover:text-orange-500"
                   >
                     Details
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/invoice-add"
+                  <Link
+                    to="/admin/invoice-add"
                     className="block hover:text-orange-500"
                   >
                     Create
-                  </a>
+                  </Link>
                 </li>
               </ul>
             )}
           </div>
 
-          <a
-            href={'/admin/setting'}
+          <Link
+            to={'/admin/setting'}
             className={`block py-2 px-4 rounded-lg hover:bg-gray-700`}
           >
             <span className="flex items-center gap-2">
               <Settings className="w-5 h-5" />
               Settings
             </span>
-          </a>
+          </Link>
         </div>
 
         <div>
           <h2 className="text-sm font-bold px-4 uppercase text-gray-400 mb-2">
             Users
           </h2>
-          <a
-            href={'/admin/permissions'}
+          <Link
+            to={'/admin/permissions'}
             className={`block py-2 px-4 rounded-lg hover:bg-gray-700`}
           >
             <span className="flex items-center gap-2">
               <Users className="w-5 h-5" />
               Permissions
             </span>
-          </a>
+          </Link>
           {/* Customers */}
           <div>
             <button
@@ -429,20 +430,20 @@ const AdminSidebar = () => {
             {openDropdown === 'Customers' && (
               <ul className="mt-2 pl-6 space-y-2 text-sm">
                 <li>
-                  <a
-                    href="/admin/customer-list"
+                  <Link
+                    to="/admin/customer-list"
                     className="block hover:text-orange-500"
                   >
                     List
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/customer-details"
+                  <Link
+                    to="/admin/customer-details"
                     className="block hover:text-orange-500"
                   >
                     Details
-                  </a>
+                  </Link>
                 </li>
               </ul>
             )}
@@ -484,20 +485,20 @@ const AdminSidebar = () => {
             {openDropdown === 'Coupons' && (
               <ul className="mt-2 pl-6 space-y-2 text-sm">
                 <li>
-                  <a
-                    href="/admin/coupons-list"
+                  <Link
+                    to="/admin/coupons-list"
                     className="block hover:text-orange-500"
                   >
                     List
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/coupons-add"
+                  <Link
+                    to="/admin/coupons-add"
                     className="block hover:text-orange-500"
                   >
                     Add
-                  </a>
+                  </Link>
                 </li>
               </ul>
             )}
@@ -507,24 +508,24 @@ const AdminSidebar = () => {
           <h2 className="text-sm font-bold px-4 uppercase text-gray-400 mb-2 mt-4">
             Support
           </h2>
-          <a
-            href={'/admin/help-center'}
+          <Link
+            to={'/admin/help-center'}
             className={`block py-2 px-4 rounded-lg hover:bg-gray-700`}
           >
             <span className="flex items-center gap-2">
               <MessageCircleQuestion className="w-5 h-5" />
               Help Center
             </span>
-          </a>
-          <a
-            href={'/admin/privacy-policy'}
+          </Link>
+          <Link
+            to={'/admin/privacy-policy'}
             className={`block py-2 px-4 rounded-lg hover:bg-gray-700`}
           >
             <span className="flex items-center gap-2">
               <GlobeLock className="w-5 h-5" />
               Privacy Policy
             </span>
-          </a>
+          </Link>
         </div>
         {/* Authentication */}
         <div>
@@ -560,36 +561,36 @@ const AdminSidebar = () => {
             {openDropdown === 'Authentication' && (
               <ul className="mt-2 pl-6 space-y-2 text-sm">
                 <li>
-                  <a
-                    href="/admin/sign-in"
+                  <Link
+                    to="/admin/sign-in"
                     className="block hover:text-orange-500"
                   >
                     Sign In
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/sign-up"
+                  <Link
+                    to="/admin/sign-up"
                     className="block hover:text-orange-500"
                   >
                     Sign Up
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/reset-password"
+                  <Link
+                    to="/admin/reset-password"
                     className="block hover:text-orange-500"
                   >
                     Reset Password
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/admin/lock-screen"
+                  <Link
+                    to="/admin/lock-screen"
                     className="block hover:text-orange-500"
                   >
                     Lock Screen
-                  </a>
+                  </Link>
                 </li>
               </ul>
             )}
