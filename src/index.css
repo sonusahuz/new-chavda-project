@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -250px; /* Hidden by default */
+  height: 100%;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  transition: right 0.3s ease; /* Smooth transition */
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.drawer.open {
+  right: 0; /* Slide in when open */
+}
+
+.drawer-content {
+  padding: 20px;
+}
+
+.drawer-title {
+  font-size: 24px;
+}
+
+.drawer-item {
+  padding: 10px 0;
+}
+
+.drawer-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+}
+.drawer-slider {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.drawer-close {
+  cursor: pointer;
+}
+
+.scroll-container {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  overflow-x: scroll;
+  scrollbar-width: none; /* Hide scrollbar for a cleaner look */
+  scroll-behavior: smooth; /* Enable smooth scrolling */
+  scroll-snap-type: x mandatory; /* Snap scrolling to nearest element */
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* Ensure it covers the full screen */
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px); /* Blur the background */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+
+  overflow-y: auto; /* Adds scrolling if content overflows */
+  box-sizing: border-box;
+}
