@@ -8,7 +8,7 @@ const links = [
   { name: 'BRANDS', to: '/brands' },
   { name: 'CONTACT US', to: '/contact-us' },
   { name: 'SHARPENING SERVICE', to: '/sharpening-service' },
-  { name: 'DASHBOARD', to: '/dashboard' },
+  { name: 'DASHBOARD', to: '/admin/dashboard' },
 ];
 
 function SubMenu() {
@@ -18,7 +18,7 @@ function SubMenu() {
         <div className="flex justify-between">
           <div className="flex space-x-7">
             <div className="hidden md:flex items-center space-x-1">
-              <Select label="BROWSE CATEGORIES" className='text-white'>
+              <Select label="BROWSE CATEGORIES" className="text-white">
                 <Option value="electronics">Power Tools</Option>
                 <Option value="clothing">Catering & Commercial</Option>
                 <Option value="books">Electrical Equipment</Option>
