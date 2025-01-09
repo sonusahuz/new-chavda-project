@@ -1,6 +1,13 @@
 import { Button, Textarea } from '@material-tailwind/react';
 
 const AdminProductAdd = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const data = Object.fromEntries(form);
+    console.log(data);
+  };
+
   return (
     <div className="bg-gray-100">
       <div className="gap-6 bg-white shadow-lg rounded-lg">
@@ -47,7 +54,7 @@ const AdminProductAdd = () => {
           </div>
 
           {/* Middle Section: Add Product Photo */}
-          <div className="p-6 w-full">
+          <form onSubmit={handleSubmit} className="p-6 w-full">
             <h2 className="text-lg font-bold mb-4">Add Product Photo</h2>
             <div className="border-2 w-full border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center text-gray-500">
               <svg
@@ -78,7 +85,7 @@ const AdminProductAdd = () => {
             {/* Right Section: Product Information */}
             <div className="mt-4">
               <h2 className="text-lg font-bold mb-4">Product Information</h2>
-              <form className="space-y-4">
+              <div className="space-y-4">
                 <div>
                   <label
                     htmlFor="productName"
@@ -88,7 +95,8 @@ const AdminProductAdd = () => {
                   </label>
                   <input
                     type="text"
-                    id="productName"
+                    id="name"
+                    name="name"
                     className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     defaultValue="Men Black Slim Fit T-shirt"
                   />
@@ -211,7 +219,7 @@ const AdminProductAdd = () => {
                   </label>
                   <Textarea label="Description" />
                 </div>
-              </form>
+              </div>
             </div>
             <div className="">
               <h2 className="text-lg font-bold mt-6 mb-5">Pricing Details</h2>
@@ -270,7 +278,7 @@ const AdminProductAdd = () => {
                 </Button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

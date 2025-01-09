@@ -1,8 +1,21 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RiGoogleFill } from 'react-icons/ri';
 import { Button } from '@material-tailwind/react';
+import { useState } from 'react';
+import { useAuthStore } from '../store/authStore';
 
 function LoginPage() {
+  const { login, loading, error } = useAuthStore();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent page reload
+    await login(email, password);
+    alert('User logged in successfully');
+    navigate('/dashboard');
+  };
   return (
     <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2 bg-gray-50">
       {/* Form Section */}
@@ -30,7 +43,7 @@ function LoginPage() {
               Sign in to start managing your projects.
             </p>
           </div>
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label
                 htmlFor="email"
@@ -44,6 +57,8 @@ function LoginPage() {
                 placeholder="Example@email.com"
                 type="email"
                 className="border w-full p-2"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
               />
             </div>
             <div className="space-y-2">
@@ -59,10 +74,15 @@ function LoginPage() {
                 placeholder="Password"
                 type="password"
                 className="border w-full p-2"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
               />
             </div>
             <div className="text-right text-sm">
-              <Link className="text-blue-500 hover:underline" to="#">
+              <Link
+                className="text-blue-500 hover:underline"
+                to="/forgot-password"
+              >
                 Forgot Password?
               </Link>
             </div>
@@ -70,8 +90,10 @@ function LoginPage() {
               className="w-full h-11 bg-[#0B3B3C] hover:bg-[#0B3B3C]/90"
               type="submit"
             >
-              Sign in
+              {loading ? 'Loading...' : 'Login'}
             </Button>
+            {/* Error Message */}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />
@@ -95,7 +117,7 @@ function LoginPage() {
                 Sign up
               </Link>
             </div>
-          </div>
+          </form>
           <div className="text-center text-sm text-muted-foreground">
             © 2023 ALL RIGHTS RESERVED
           </div>

@@ -1,199 +1,144 @@
-import { useState } from 'react';
-import { MinusIcon, PlusIcon, ShoppingCart } from 'lucide-react';
-import { Button, Card, Radio } from '@material-tailwind/react';
+import { useEffect } from 'react';
+import useCartStore from '../store/cartStore';
 
-function CartPage() {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: 'Bosch Flap discs – Flap disc Standard for Metal 115 mm, 22.23 mm, 40, straight – 2608601707',
-      price: 268,
-      quantity: 1,
-      image: 'https://chavda.com/wp-content/uploads/2021/09/AC50-430x430.jpg',
-    },
-    {
-      id: 2,
-      name: 'Bosch Flap discs – Flap disc Standard for Metal 115 mm, 22.23 mm, 40, straight – 2608601707',
-      price: 268,
-      quantity: 1,
-      image:
-        'https://chavda.com/wp-content/uploads/2022/01/dmp180z-001-430x430.jpg',
-    },
-  ]);
+const Cart = () => {
+  const { cartItems, fetchCart, updateCartItem, removeFromCart, clearCart } =
+    useCartStore();
 
-  const updateQuantity = (id, increment) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: increment
-                ? item.quantity + 1
-                : Math.max(0, item.quantity - 1),
-            }
-          : item
+  useEffect(() => {
+    fetchCart(); // Load cart items when component mounts
+  }, [fetchCart]);
+
+  const handleIncrease = (productId, currentQuantity) => {
+    updateCartItem(productId, currentQuantity + 1);
+  };
+
+  const handleDecrease = (productId, currentQuantity) => {
+    if (currentQuantity > 1) {
+      updateCartItem(productId, currentQuantity - 1);
+    }
+  };
+
+  const handleRemove = (productId) => {
+    removeFromCart(productId);
+  };
+
+  const handleClearCart = () => {
+    clearCart();
+  };
+
+  const calculateTotal = () => {
+    return cartItems
+      .reduce(
+        (total, item) => total + item.Product.RegularPrice * item.quantity,
+        0
       )
-    );
+      .toFixed(2);
   };
-
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const deliveryFee = 150;
-  const total = subtotal + deliveryFee;
-  const vat = total * 0.15;
 
   return (
-    <>
-      {/* Header */}
-      <header className="bg-[#006400] py-16 lg:py-4 text-center">
-        <div className="flex items-center md:justify-between justify-center px-4 md:px-5 lg:px-10 xl:px-24 flex-wrap">
-          <h1 className="text-white text-5xl font-bold">CART</h1>
-          <img
-            className="h-60 hidden md:block"
-            src="./assets/images/contact/cart-image.png"
-            alt="Chavda International"
-          />
-        </div>
-      </header>
-
-      <div className="mx-auto px-4 md:px-5 lg:px-10 xl:px-24">
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="pt-4">
-            <div className="text-left mb-2">
-              <h2 className="text-2xl font-bold"> Product Details</h2>
-              <div className="w-44 h-1 bg-green-800 mb-4"></div>
-            </div>
-            <div className="space-y-4">
-              {cartItems.map((item) => (
-                <Card key={item.id} className="p-4">
-                  <div className="flex gap-4 flex-wrap">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      width={100}
-                      height={100}
-                      className="rounded-lg"
-                    />
-                    <div className="flex-1 space-y-2">
-                      <h3 className="font-medium">{item.name}</h3>
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold">₹{item.price}</span>
-                        <span className="text-sm text-green-600">
-                          FREE DELIVERY : Orders Above R1000
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => updateQuantity(item.id, false)}
-                        >
-                          <MinusIcon className="h-4 w-4" />
-                        </Button>
-                        <span className="w-8 text-center">{item.quantity}</span>
-                        <Button
-                          variant="outlined"
-                          size="md"
-                          onClick={() => updateQuantity(item.id, true)}
-                        >
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          className="text-red-500 hover:text-red-600"
-                          onClick={() => removeItem(item.id)}
-                        >
-                          Remove Item
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
+    <div>
+      <div className="bg-white py-6 sm:py-8 lg:py-12">
+        <div className="mx-auto max-w-screen-lg px-4 md:px-8">
+          <div className="mb-6 sm:mb-10 lg:mb-16">
+            <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">
+              Your Cart
+            </h2>
           </div>
 
-          <div className=" bg-blue-100 pt-4">
-            <div className="text-center mx-auto mb-2">
-              <h2 className="text-2xl font-bold">Order Summary</h2>
-              <div className="w-44 h-1 bg-green-800 mx-auto mb-4"></div>
-            </div>
-            <div className="p-4">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-bold mb-2 bg-green-600 text-white p-2">
-                    PROMO CODE
-                  </h3>
-                  <input
-                    placeholder="Enter promo code"
-                    className="w-full bg-white text-black p-3 border"
-                  />
-                </div>
-
-                <div className="bg-green-100 p-4 rounded-lg space-y-2">
-                  <div className="flex justify-between">
-                    <span>Subtotal</span>
-                    <span>R{subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Delivery</span>
-                    <span>R{deliveryFee.toFixed(2)}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="font-medium">
-                    National Shipping - Delivers to Gauteng, South Africa
-                  </h3>
-                  <Radio defaultValue="shipping">
-                    <div className="flex items-center space-x-2">
-                      <label htmlFor="shipping">
-                        National Shipping
-                        <span className="block text-sm text-gray-500">
-                          R150.00
-                        </span>
-                      </label>
+          {cartItems.length > 0 ? (
+            <>
+              <div className="mb-6 flex flex-col gap-4 sm:mb-8 md:gap-6">
+                {cartItems.map((item) => (
+                  <div
+                    key={item.Product.productId}
+                    className="flex flex-wrap gap-x-4 overflow-hidden rounded-lg border sm:gap-y-4 lg:gap-6"
+                  >
+                    <div className="group relative block h-48 w-32 overflow-hidden bg-gray-100 sm:h-56 sm:w-40">
+                      <img
+                        src={item.Product.image}
+                        alt={item.Product.Name}
+                        className="h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
+                      />
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <label htmlFor="collection">
-                        Collection at Chawda Sandton Office
-                        <span className="block text-sm text-gray-500">
-                          FREE
+
+                    <div className="flex flex-1 flex-col justify-between py-4">
+                      <div>
+                        <h3 className="mb-1 text-lg font-bold text-gray-800 lg:text-xl">
+                          {item.Product.Name}
+                        </h3>
+                        <span className="block text-gray-500">
+                          Price: ${item.Product.RegularPrice}
                         </span>
-                      </label>
+                        <span className="block text-gray-500">In stock</span>
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                        <button
+                          className="text-indigo-500 hover:text-indigo-600"
+                          onClick={() => handleRemove(item.Product.productId)}
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
-                  </Radio>
-                </div>
 
-                <div className="pt-4 border-t">
-                  <div className="flex justify-between text-xl font-bold">
-                    <span>Total</span>
-                    <span>R{total.toFixed(2)}</span>
+                    <div className="flex w-full justify-between border-t p-4 sm:w-auto sm:border-none sm:pl-0 lg:p-6 lg:pl-0">
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="p-2 bg-gray-200 hover:bg-gray-300 rounded"
+                          onClick={() =>
+                            handleDecrease(item.productId, item.quantity)
+                          }
+                        >
+                          -
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button
+                          className="p-2 bg-gray-200 hover:bg-gray-300 rounded"
+                          onClick={() =>
+                            handleIncrease(item.productId, item.quantity)
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
+                      <span className="font-bold">
+                        $
+                        {(item.Product.RegularPrice * item.quantity).toFixed(2)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-500">
-                    Including R{vat.toFixed(2)} VAT 15%
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-center">
-                  <Button className="font-bold text-center rounded-full h-12 bg-green-600 hover:bg-green-700 text-white mx-auto w-52">
-                    CHECKOUT
-                    <ShoppingCart className="mr-2 h-6 w-6" />
-                  </Button>
-                </div>
+                ))}
               </div>
-            </div>
-          </div>
+
+              <div className="flex flex-col items-end gap-4">
+                <div className="w-full rounded-lg bg-gray-100 p-4 sm:max-w-xs">
+                  <div className="flex justify-between gap-4 text-gray-500">
+                    <span>Total</span>
+                    <span>${calculateTotal()}</span>
+                  </div>
+                </div>
+
+                <button
+                  className="rounded-lg bg-red-500 px-8 py-3 text-white hover:bg-red-600"
+                  onClick={handleClearCart}
+                >
+                  Clear Cart
+                </button>
+
+                <button className="rounded-lg bg-indigo-500 px-8 py-3 text-white hover:bg-indigo-600">
+                  Checkout
+                </button>
+              </div>
+            </>
+          ) : (
+            <p className="text-center text-gray-600">Your cart is empty.</p>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
-}
+};
 
-export default CartPage;
+export default Cart;

@@ -19,12 +19,26 @@ import { useState } from 'react';
 import { Bell, ShoppingCart } from 'lucide-react';
 import { Drawer } from './Drawer';
 import { Button, Option, Select } from '@material-tailwind/react';
+import { useAuthStore } from '../store/authStore';
+import useCartStore from '../store/cartStore';
+import useWishlistStore from '../store/wishlistStore';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-
+  const { cartItems } = useCartStore();
   const [search, setSearch] = useState();
+  const { wishlistItems } = useWishlistStore();
+  const { isLogin, logout, loading } = useAuthStore();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      alert('Logged out successfully');
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const items = [
     { id: '1', title: 'HOME', href: 'home' },
@@ -162,9 +176,9 @@ export default function Header() {
                 <ChartBarStacked className="w-5 h-5" />
                 <span className="text-xs hidden">Category</span>
               </li>
-              {bottomNavItems.map((item, index) => (
+              {bottomNavItems.map((item) => (
                 <>
-                  <li key={index}>
+                  <li key={item.href}>
                     <Link
                       onClick={() => window.scrollTo(0, 0)}
                       to={item.href}
@@ -188,10 +202,14 @@ export default function Header() {
                   onKeyDown={handleKeyPress}
                   value={search}
                   placeholder="Search Products...."
-                  className="w-full 2xl:w-full px-4 text-sm outline-none border-none focus:ring-0 focus:outline-none"
+                  className="w-full border 2xl:w-full px-4 text-sm outline-none border-none focus:ring-0 focus:outline-none"
                   type="text"
                 />
-                <Select label="Category" size="md" className=" rounded-none w-full p-2">
+                <Select
+                  label="Category"
+                  size="md"
+                  className=" rounded-none w-full p-2"
+                >
                   <Option value="electronics">Electronics</Option>
                   <Option value="clothing">Clothing</Option>
                   <Option value="books">Books</Option>
@@ -215,19 +233,29 @@ export default function Header() {
           <div className="hidden sm:block">
             <div className="flex items-center space-x-6">
               <div className="hidden md:block">
-                <Link to={'/login'} className="text-sm font-bold">
-                  LOGIN / REGISTER
-                </Link>
+                {isLogin ? (
+                  <button
+                    onClick={handleLogout}
+                    disabled={loading}
+                    className="text-sm font-bold text-red-600"
+                  >
+                    {loading ? 'Logging out...' : 'LOGOUT'}
+                  </button>
+                ) : (
+                  <Link to="/login" className="text-sm font-bold text-blue-600">
+                    LOGIN / REGISTER
+                  </Link>
+                )}
               </div>
 
               <Link
-                to="/cart"
+                to="/wishlist"
                 className="flex flex-col items-center gap-1 text-sm hover:text-foreground transition-colors relative"
               >
                 <div className="relative">
                   <Heart className="h-5 w-5" />
                   <span className="absolute -top-2 -right-2 bg-green-600 text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                    0
+                    {wishlistItems.length}
                   </span>
                 </div>
               </Link>
@@ -250,14 +278,21 @@ export default function Header() {
               >
                 <div className="relative">
                   <ShoppingCart className="h-5 w-5" />
-                  <span className="absolute -top-2 -right-2 bg-green-600 text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                    0
+                  <span className="absolute text-white -top-2 -right-2 bg-green-600 text-destructive-foreground text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                    {cartItems?.length}
                   </span>
                 </div>
               </Link>
 
               <div>
-                <span className="text-sm">R0.00</span>
+                <span className="text-sm">
+                  R{' '}
+                  {cartItems?.reduce(
+                    (total, item) =>
+                      total + item.Product.RegularPrice * item.quantity,
+                    0
+                  )}
+                </span>
               </div>
             </div>
           </div>
@@ -272,7 +307,7 @@ export default function Header() {
                 onKeyDown={handleKeyPress}
                 value={search}
                 placeholder="Search Products...."
-                className="w-full mx-auto block px-2 text-sm"
+                className="w-full border mx-auto block px-2 text-sm"
                 type="text"
               />
               <button className="inline-flex p-2 items-center bg-[#0aad0a] text-white rounded-none border border-input px-3 text-sm font-medium text-foreground outline-offset-2 transition-colors focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:cursor-not-allowed disabled:opacity-50">
@@ -282,28 +317,30 @@ export default function Header() {
           </div>
         </div>
       </header>
-      <Drawer
-        content={
-          <ul className="mt-10">
-            {items.map(({ id, title, href }) => (
-              <li key={id}>
-                <Link
-                  key={id}
-                  to={`/${href}`}
-                  onClick={() => handleNavigation(href.toLowerCase())}
-                  aria-label={`Go to ${title}`}
-                  className="block font-light text-xl px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        }
-        isOpen={open}
-        width="250px"
-        setIsOpen={() => setOpen(false)}
-      />
+      {open && (
+        <Drawer
+          content={
+            <ul className="mt-10">
+              {items.map(({ id, title, href }) => (
+                <li key={id}>
+                  <Link
+                    key={id}
+                    to={`/${href}`}
+                    onClick={() => handleNavigation(href.toLowerCase())}
+                    aria-label={`Go to ${title}`}
+                    className="block font-light text-xl px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          }
+          isOpen={open}
+          width="250px"
+          setIsOpen={() => setOpen(false)}
+        />
+      )}
     </>
   );
 }

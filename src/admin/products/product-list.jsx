@@ -1,66 +1,33 @@
 import { Checkbox, Option, Select } from '@material-tailwind/react';
-import { Star, Eye, Edit, Trash2 } from 'lucide-react';
+import { Eye, Edit, Trash2 } from 'lucide-react';
 import { DefaultPagination } from '../pagination';
-
-const products = [
-  {
-    id: 1,
-    name: 'Black T-shirt',
-    sizes: ['S', 'M', 'L', 'XL'],
-    price: '$80.00',
-    stock: '486 Items Left',
-    sold: '155 Sold',
-    category: 'Fashion',
-    rating: 2.5,
-    reviews: 55,
-  },
-  {
-    id: 2,
-    name: 'White T-shirt',
-    sizes: ['S', 'M', 'L', 'XL'],
-    price: '$70.00',
-    stock: '200 Items Left',
-    sold: '120 Sold',
-    category: 'Fashion',
-    rating: 2.3,
-    reviews: 30,
-  },
-  {
-    id: 3,
-    name: 'Blue Hoodie',
-    sizes: ['M', 'L', 'XL'],
-    price: '$120.00',
-    stock: '150 Items Left',
-    sold: '75 Sold',
-    category: 'Fashion',
-    rating: 2.8,
-    reviews: 90,
-  },
-  {
-    id: 2,
-    name: 'Green Polo',
-    sizes: ['S', 'M', 'L'],
-    price: '$50.00',
-    stock: '300 Items Left',
-    sold: '110 Sold',
-    category: 'Fashion',
-    rating: 2.2,
-    reviews: 40,
-  },
-  {
-    id: 5,
-    name: 'Red Jacket',
-    sizes: ['L', 'XL'],
-    price: '$150.00',
-    stock: '80 Items Left',
-    sold: '60 Sold',
-    category: 'Fashion',
-    rating: 2.9,
-    reviews: 100,
-  },
-];
+import { useEffect, useState } from 'react';
+import { API_URL } from '../../lib/utils';
 
 const AdminProductList = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  async function fetchProduct() {
+    const res = await fetch(`${API_URL}/api/products`);
+    const data = await res.json();
+    return data.products;
+  }
+  useEffect(() => {
+    setLoading(true);
+    fetchProduct().then((data) => {
+      setProducts(data);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        Loading...
+      </div>
+    );
+
   return (
     <div className="p-6 ">
       <div className="flex justify-between items-center mb-2">
@@ -83,13 +50,25 @@ const AdminProductList = () => {
               <th className="px-2 py-2 text-left">
                 <Checkbox />
               </th>
-
-              <th className="px-2 py-2 text-left">Product Name & Size</th>
-              <th className="px-2 py-2">Price</th>
-              <th className="px-2 py-2">Stock</th>
-              <th className="px-2 py-2">Category</th>
-              <th className="px-2 py-2">Rating</th>
-              <th className="px-2 py-2">Action</th>
+              {[
+                'Id',
+                'Name',
+                'Images',
+                'SKU',
+                'RegularPrice',
+                'SalesPrice',
+                'isSalePriceActive',
+                'Stock',
+                'Description',
+                'Features',
+                'Support',
+                'Categories',
+                'Tages',
+              ].map((column) => (
+                <th key={column} className="px-2 py-2 text-left">
+                  {column}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -106,25 +85,30 @@ const AdminProductList = () => {
                   />
                   <div>
                     <p className="font-medium">{product.name}</p>
-                    <p className="text-sm text-gray-500">
-                      Size: {product.sizes.join(', ')}
-                    </p>
                   </div>
                 </td>
-                <td className="px-2 py-2 text-left">{product.price}</td>
+                <td className="px-2 py-2 text-left">{product.SKU}</td>
                 <td className="px-2 py-2 text-left">
-                  <p>{product.stock}</p>
-                  <p className="text-sm text-gray-500">{product.sold}</p>
+                  <p>{product.RegularPrice}</p>
+                  <p className="text-sm text-gray-500">{product.SalesPrice}</p>
                 </td>
-                <td className="px-2 py-2 text-left">{product.category}</td>
                 <td className="px-2 py-2 text-left">
-                  <div className="flex items-center justify-start space-x-1">
-                    <Star className="text-yellow-500 w-4 h-4" />
-                    <span>{product.rating}</span>
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    {product.reviews} Review
-                  </p>
+                  {product.isSalePriceActive}
+                </td>
+                <td className="px-2 py-2 text-left">
+                  <span>{product.Description}</span>
+                </td>
+                <td className="px-2 py-2 text-left">
+                  <span>{product.Features}</span>
+                </td>{' '}
+                <td className="px-2 py-2 text-left">
+                  <span>{product.Support}</span>
+                </td>{' '}
+                <td className="px-2 py-2 text-left">
+                  <span>{product.Categories}</span>
+                </td>{' '}
+                <td className="px-2 py-2 text-left">
+                  <span>{product.Tags}</span>
                 </td>
                 <td className="px-2 py-2 flex space-x-2 justify-start">
                   <button className="text-blue-500 hover:text-blue-600 bg-blue-100 p-2 rounded-sm">

@@ -15,7 +15,7 @@ const useFetch = (url) => {
           throw new Error(`Error: ${response.statusText}`);
         }
         const result = await response.json();
-        setData(result);
+        setData(result.products);
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);

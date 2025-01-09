@@ -49,6 +49,10 @@ import AdminSignIn from './admin/authentication/sign-in';
 import AdminSignUp from './admin/authentication/sign-up';
 import AdminResetPassword from './admin/authentication/reset-password';
 import AdminLockScreen from './admin/authentication/lock-screen';
+import ForgotPassword from './pages/ForgotPassword';
+import Wishlist from './pages/Wishlist';
+import ProtectedRoute from './auth/ProtectedRoute';
+import ResetPassword from './pages/ResetPassword';
 
 const App = () => {
   const location = useLocation();
@@ -62,10 +66,41 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<AdminDashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/search/:category" element={<ProductCategory />} />
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedRoute>
+              <Wishlist />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<CartPage />} />
+        <Route
+          path="/reset-password"
+          element={
+            <ProtectedRoute>
+              <ResetPassword />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -78,6 +113,7 @@ const App = () => {
         <Route path="/about-us" element={<AboutPage />} />
         <Route path="/service" element={<ServiceArea />} />
         <Route path="/search-result/:term" element={<SearchProductList />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route element={<Sidebar />}>
           {/* product  */}

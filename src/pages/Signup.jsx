@@ -1,8 +1,35 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { RiGoogleFill } from 'react-icons/ri';
 import { Button } from '@material-tailwind/react';
+import { useAuthStore } from '../store/authStore';
 
 function SignupPage() {
+  const navigate = useNavigate();
+  const { register, loading, error } = useAuthStore();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await register(formData.name, formData.email, formData.password);
+      alert('User registered successfully');
+      navigate('/login');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="flex min-h-screen px-4 md:px-5 lg:px-10 xl:px-24">
       {/* Left Column */}
@@ -26,10 +53,7 @@ function SignupPage() {
               className="mb-8"
             />
             <div className="relative mt-96 p-6">
-              {/* Background with blur effect */}
               <div className="absolute inset-0 bg-black/40 rounded-lg backdrop-blur-sm z-0"></div>
-
-              {/* Foreground content */}
               <div className="relative z-10">
                 <div className="inline-block rounded-lg bg-green-500 px-4 py-2 text-white">
                   <div className="flex items-center gap-2">
@@ -53,7 +77,7 @@ function SignupPage() {
       <div className="flex w-full flex-col px-4 lg:w-1/2 lg:px-8 bg-gray-50">
         <div className="ml-auto mt-4">
           <p className="text-sm text-gray-600">
-            have an account?{' '}
+            Have an account?{' '}
             <Link to="/login" className="text-green-500 hover:underline">
               Sign In
             </Link>
@@ -90,15 +114,21 @@ function SignupPage() {
               </div>
             </div>
 
-            <form className="mt-6 space-y-4">
+            <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
               <div>
                 <input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="Full Name"
                   className="bg-white text-black w-full p-2 border"
                 />
               </div>
               <div>
                 <input
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   type="email"
                   placeholder="Enter Email"
                   className="bg-white text-black w-full p-2 border"
@@ -106,6 +136,9 @@ function SignupPage() {
               </div>
               <div className="relative">
                 <input
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   type="password"
                   placeholder="Password"
                   className="bg-white text-black w-full p-2 border"
@@ -113,6 +146,9 @@ function SignupPage() {
               </div>
               <div className="relative">
                 <input
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                   type="password"
                   className="bg-white text-black w-full p-2 border"
                   placeholder="Confirm Password"
@@ -121,9 +157,14 @@ function SignupPage() {
               <Button
                 className="w-full bg-green-500 hover:bg-green-600 h-11"
                 type="submit"
+                disabled={loading}
               >
-                Create Account
+                {loading ? 'Creating Account...' : 'Create Account'}
               </Button>
+
+              <div className="flex items-center flex-col mx-auto">
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+              </div>
             </form>
 
             <p className="mt-4 text-center text-xs text-gray-600">

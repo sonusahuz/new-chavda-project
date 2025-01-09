@@ -1,6 +1,33 @@
+import axios from 'axios';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import cookies from 'js-cookie';
+
 export default function AdminSignIn() {
-  const handleSubmit = () => {};
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function adminLogin(email, password) {
+    const res = await axios.post(`${API_BASE_URL}/api/admin/login`, {
+      email,
+      password,
+    });
+
+    cookies.set('Admintoken', res.data.token);
+
+    return res;
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await adminLogin(email, password);
+      window.location.href = '/admin/dashboard';
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white p-4">
@@ -32,8 +59,9 @@ export default function AdminSignIn() {
                 id="email"
                 name="email"
                 type="email"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
                 placeholder="Enter your email"
-                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
@@ -46,19 +74,22 @@ export default function AdminSignIn() {
                 >
                   Password
                 </label>
-                <button
-                  type="button"
-                  className="text-sm text-orange-500 hover:text-orange-600"
-                >
-                  Reset password
-                </button>
+                <Link to="/admin/forgot-password">
+                  <button
+                    type="button"
+                    className="text-sm text-orange-500 hover:text-orange-600"
+                  >
+                    Forgot your password?
+                  </button>
+                </Link>
               </div>
               <input
                 id="password"
                 name="password"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
                 type="password"
                 placeholder="Enter your password"
-                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>

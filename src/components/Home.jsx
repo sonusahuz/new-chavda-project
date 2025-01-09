@@ -45,7 +45,7 @@ export default function Home() {
     };
   }, []);
 
-  const api = `https://dummyjson.com/products`;
+  const api = import.meta.env.VITE_API_BASE_URL + '/api/products';
   const { data, loading, error } = useFetch(api);
 
   if (loading) return <Loading />;
@@ -53,9 +53,9 @@ export default function Home() {
     return <div className="text-red-500 text-center">Error: {error}</div>;
   }
 
-  if (!data || data.products.length === 0) {
-    return <div className="text-center">No products found.</div>;
-  }
+  // if (!data || data.products.length === 0) {
+  //   return <div className="text-center">No products found.</div>;
+  // }
   const categories = [
     { name: 'Dairy, Bread & Eggs', icon: '🥛' },
     { name: 'Snacks & Munchies', icon: '🍿' },
@@ -67,7 +67,7 @@ export default function Home() {
   ];
 
   const handleNext = () => {
-    if (currentIndex + 4 < data.products.length) {
+    if (currentIndex + 4 < data.length) {
       setCurrentIndex(currentIndex + 4);
     }
   };
@@ -149,7 +149,7 @@ export default function Home() {
                   variant="outline"
                   size="icon"
                   onClick={handleNext}
-                  disabled={currentIndex + 4 >= data.products.length}
+                  disabled={currentIndex + 4 >= data.products?.length}
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -157,16 +157,10 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2">
-              {data.products
+              {data
                 .slice(currentIndex, currentIndex + itemsPerPage)
                 .map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    id={product.id}
-                    title={product.title}
-                    thumbnail={product.thumbnail}
-                    price={product.price}
-                  />
+                  <ProductCard key={product.id} product={product} />
                 ))}
             </div>
           </div>
@@ -216,7 +210,7 @@ export default function Home() {
                       $24
                     </span>
                   </div>
-                  <Button className="bg-[#0aad0a] hover:bg-green-700 h-11">
+                  <Button className="bg-[#0aad0a] hover:bg-green-700 h-11 flex items-center justify-between gap-4">
                     <Plus /> Add to cart
                   </Button>
                   <div>
@@ -259,7 +253,7 @@ export default function Home() {
                       variant="outlined"
                       size="sm"
                       onClick={handleNext}
-                      disabled={currentIndex + 4 >= data.products.length}
+                      disabled={currentIndex + 4 >= data.products?.length}
                     >
                       <ChevronRight className="h-4 w-4" />
                     </Button>
@@ -267,16 +261,10 @@ export default function Home() {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2">
-                  {data.products
+                  {data
                     .slice(currentIndex, currentIndex + itemsPerPage)
                     .map((product) => (
-                      <ProductCard
-                        key={product.id}
-                        id={product.id}
-                        title={product.title}
-                        thumbnail={product.thumbnail}
-                        price={product.price}
-                      />
+                      <ProductCard key={product.id} product={product} />
                     ))}
                 </div>
               </div>

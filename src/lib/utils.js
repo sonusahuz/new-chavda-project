@@ -7,3 +7,5 @@ export const handleNavigation = (id) => {
     window.scrollTo({ top: y, behavior: 'smooth' });
   }
 };
+
+export const API_URL = import.meta.env.VITE_API_BASE_URL;

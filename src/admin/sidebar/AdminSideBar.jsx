@@ -25,7 +25,7 @@ const AdminSidebar = () => {
   };
 
   return (
-    <div className="fixed top-0 h-screen w-full">
+    <div className="absolute top-0">
       {/* AdminSidebar */}
       <aside className="w-64 bg-gray-900 text-white h-screen overflow-y-auto">
         <div className="p-5">

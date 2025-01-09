@@ -8,7 +8,7 @@ const Sidebar = () => {
   return (
     <div>
       <div className="flex items-start justify-between">
-        <div>{isAdminRoute && <AdminSidebar />}</div>
+        <div className=" fixed">{isAdminRoute && <AdminSidebar />}</div>
         <div className="w-full flex-1 overflow-y-auto ml-64">
           <AdminHeader />
           <Outlet />

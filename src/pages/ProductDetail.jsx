@@ -1,14 +1,52 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Facebook, Heart, Instagram, Share2, Twitter } from 'lucide-react';
 import { RiWhatsappFill } from 'react-icons/ri';
 import { PayFlexModal } from '../components/PayFlexModal';
 import ProductList from '../components/ProductList';
 import { Button, Card } from '@material-tailwind/react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { API_URL } from '../lib/utils';
+import useCartStore from '../store/cartStore';
+import { useAuthStore } from '../store/authStore';
+import useWishlistStore from '../store/wishlistStore';
 
 function ProductDetail() {
+  const { addToCart } = useCartStore();
+  const { isLogin } = useAuthStore();
+  const navigate = useNavigate();
+  const { addToWishlist } = useWishlistStore();
+  const { id } = useParams();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/products/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setProduct(data.product);
+      });
+  }, []);
+
+  const handleAddToCart = async (id) => {
+    if (isLogin) {
+      await addToCart(id, 1);
+      alert('Product added to cart successfully');
+    } else {
+      navigate('/login');
+    }
+  };
+
+  const handleAddToWishlist = async (id) => {
+    if (isLogin) {
+      await addToWishlist(id);
+      alert('Product added to wishlist successfully');
+    } else {
+      navigate('/login');
+    }
+  };
 
   const images = [
     '/placeholder.svg?height=600&width=600',
@@ -48,7 +86,11 @@ function ProductDetail() {
             </div>
 
             <div className="flex gap-4">
-              <Button size="md" className="flex-1 bg-green-800 text-white ">
+              <Button
+                onClick={() => handleAddToCart(product.id)}
+                size="md"
+                className="flex-1 bg-green-800 text-white "
+              >
                 Add to Cart
               </Button>
               <Button
@@ -99,13 +141,15 @@ function ProductDetail() {
           <div className="flex-1 space-y-6">
             <div>
               <h1 className="text-2xl font-bold text-green-800">
-                TORK CRAFT Impact Phil.2 X 50Mm Power Bit Bulk Ph2 – TCIPH0250B
+                {product.Name}
               </h1>
               <p className="text-xl text-green-800 mt-2">Special Price</p>
               <div className="mt-2 flex items-baseline gap-4">
-                <span className="text-2xl font-bold">₹268</span>
+                <span className="text-2xl font-bold">
+                  ₹{product.RegularPrice}
+                </span>
                 <span className="text-lg text-muted-foreground line-through">
-                  ₹320
+                  {product.SalesPrice}
                 </span>
                 <span className="rounded-md bg-green-100 px-2 py-1 text-sm text-green-700">
                   16% off
@@ -133,7 +177,11 @@ function ProductDetail() {
             </div>
 
             <div className="flex gap-4">
-              <Button variant="outline" size="sm">
+              <Button
+                onClick={() => handleAddToWishlist(product.id)}
+                variant="outline"
+                size="sm"
+              >
                 <Heart className="mr-2 h-4 w-4" />
                 Add to wishlist
               </Button>
