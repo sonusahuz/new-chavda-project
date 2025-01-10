@@ -180,12 +180,17 @@ function ProductDetail() {
               <Button
                 onClick={() => handleAddToWishlist(product.id)}
                 variant="outline"
+                className="flex items-center justify-between"
                 size="sm"
               >
                 <Heart className="mr-2 h-4 w-4" />
                 Add to wishlist
               </Button>
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                className="flex items-center justify-between"
+                size="sm"
+              >
                 <Share2 className="mr-2 h-4 w-4" />
                 Share
               </Button>

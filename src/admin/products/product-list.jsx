@@ -3,6 +3,8 @@ import { Eye, Edit, Trash2 } from 'lucide-react';
 import { DefaultPagination } from '../pagination';
 import { useEffect, useState } from 'react';
 import { API_URL } from '../../lib/utils';
+import { Link } from 'react-router-dom';
+import adminApi from '../adminStore/adminProvider';
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
@@ -27,6 +29,14 @@ const AdminProductList = () => {
         Loading...
       </div>
     );
+
+  const handleDeleteProduct = async (id) => {
+    await adminApi.delete(`${API_URL}/api/products/${id}`);
+    alert('Product deleted successfully');
+    fetchProduct().then((data) => {
+      setProducts(data);
+    });
+  };
 
   return (
     <div className="p-6 ">
@@ -111,13 +121,20 @@ const AdminProductList = () => {
                   <span>{product.Tags}</span>
                 </td>
                 <td className="px-2 py-2 flex space-x-2 justify-start">
-                  <button className="text-blue-500 hover:text-blue-600 bg-blue-100 p-2 rounded-sm">
-                    <Eye className="w-5 h-5" />
-                  </button>
-                  <button className="text-orange-500 hover:text-orange-600 bg-orange-100 p-2 rounded-sm">
-                    <Edit className="w-5 h-5" />
-                  </button>
-                  <button className="text-red-500 hover:text-red-600 bg-red-100 p-2 rounded-sm">
+                  <Link to={`/admin/product/detail/${product.id}`}>
+                    <button className="text-blue-500 hover:text-blue-600 bg-blue-100 p-2 rounded-sm">
+                      <Eye className="w-5 h-5" />
+                    </button>
+                  </Link>
+                  <Link to={`/admin/product/edit/${product.id}`}>
+                    <button className="text-orange-500 hover:text-orange-600 bg-orange-100 p-2 rounded-sm">
+                      <Edit className="w-5 h-5" />
+                    </button>
+                  </Link>
+                  <button
+                    onClick={() => handleDeleteProduct(product.id)}
+                    className="text-red-500 hover:text-red-600 bg-red-100 p-2 rounded-sm"
+                  >
                     <Trash2 className="w-5 h-5" />
                   </button>
                 </td>

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import axios from 'axios';
 import Cookies from 'js-cookie';
+import api from '../auth/axiosProvider';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Replace with your API URL
 
@@ -23,7 +23,7 @@ export const useAuthStore = create((set) => ({
   register: async (name, email, password) => {
     try {
       set({ loading: true, error: null });
-      const response = await axios.post(`${API_BASE_URL}/api/user/register`, {
+      const response = await api.post(`${API_BASE_URL}/api/user/register`, {
         name,
         email,
         password,
@@ -39,7 +39,7 @@ export const useAuthStore = create((set) => ({
   login: async (email, password) => {
     try {
       set({ loading: true, error: null });
-      const response = await axios.post(`${API_BASE_URL}/api/user/login`, {
+      const response = await api.post(`${API_BASE_URL}/api/user/login`, {
         email,
         password,
       });
@@ -47,7 +47,7 @@ export const useAuthStore = create((set) => ({
 
       // Save token in cookies
       Cookies.set('token', token, { expires: 7 }); // 7-day expiration
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
       set({ user: { name }, token, isLogin: true, loading: false });
       return 'Login successful';
@@ -60,7 +60,7 @@ export const useAuthStore = create((set) => ({
   updateProfile: async (updatedData) => {
     try {
       set({ loading: true, error: null });
-      const response = await axios.put(
+      const response = await api.put(
         `${API_BASE_URL}/api/user/updateProfile`,
         updatedData,
         {
@@ -81,7 +81,7 @@ export const useAuthStore = create((set) => ({
   forgotPassword: async (email) => {
     try {
       set({ loading: true, error: null });
-      const response = await axios.post(
+      const response = await api.post(
         `${API_BASE_URL}/api/user/forgot-password`,
         {
           email,
@@ -98,7 +98,7 @@ export const useAuthStore = create((set) => ({
   resetPassword: async (token, newPassword) => {
     try {
       set({ loading: true, error: null });
-      const response = await axios.post(
+      const response = await api.post(
         `${API_BASE_URL}/api/user/reset-password`,
         {
           token,
@@ -123,7 +123,7 @@ export const useAuthStore = create((set) => ({
       }
 
       // Optionally validate the token with an API call
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       set({ isLogin: true, loading: false });
       return true;
       // eslint-disable-next-line no-unused-vars
@@ -140,7 +140,7 @@ export const useAuthStore = create((set) => ({
       set({ loading: true, error: null });
       const token = Cookies.get('token');
       if (token) {
-        await axios.get(`${API_BASE_URL}/api/user/logout`, null, {
+        await api.get(`${API_BASE_URL}/api/user/logout`, null, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }

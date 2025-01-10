@@ -38,25 +38,29 @@ const Wishlist = () => {
             {wishlistItems.map((item) => (
               <div
                 key={item.productId}
-                className="flex flex-col items-center border rounded-lg p-4"
+                className="flex flex-col items-center border rounded-lg p-4 h-40"
               >
-                <img
-                  src={item.image || 'https://via.placeholder.com/150'}
-                  alt={item.Name}
-                  className="w-full h-40 object-cover rounded-md mb-4"
-                />
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  {item.Product.Name}
-                </h3>
-                <p className="text-gray-500 mb-4">
-                  ${item.Product.RegularPrice}
-                </p>
-                <button
-                  className="mb-2 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-                  onClick={() => handleRemove(item.productId)}
-                >
-                  Remove
-                </button>
+                <div className="flex items-start justify-start gap-6">
+                  <img
+                    src={item.image || 'https://via.placeholder.com/150'}
+                    alt={item.Name}
+                    className="w-32 object-cover rounded-md"
+                  />
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2 truncate">
+                      {item.Product.Name}
+                    </h3>
+                    <p className="text-gray-500 mb-4">
+                      ${item.Product.RegularPrice}
+                    </p>
+                    <button
+                      className="mb-2 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+                      onClick={() => handleRemove(item.productId)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

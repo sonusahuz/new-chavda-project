@@ -1,31 +1,22 @@
-import axios from 'axios';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import cookies from 'js-cookie';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAdminAuthStore } from '../adminStore/adminAuthStore';
 
 export default function AdminSignIn() {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const { loading, error, login } = useAdminAuthStore();
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
   const [password, setPassword] = useState('');
-
-  async function adminLogin(email, password) {
-    const res = await axios.post(`${API_BASE_URL}/api/admin/login`, {
-      email,
-      password,
-    });
-
-    cookies.set('Admintoken', res.data.token);
-
-    return res;
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await adminLogin(email, password);
-      window.location.href = '/admin/dashboard';
-    } catch (err) {
-      console.log(err);
+      const res = await login(email, password);
+      console.log(res);
+      alert('User logged in successfully');
+      navigate('/admin/dashboard');
+    } catch (error) {
+      throw new Error(error);
     }
   };
 
@@ -113,8 +104,10 @@ export default function AdminSignIn() {
               type="submit"
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
             >
-              Sign In
+              {loading ? 'Loading...' : '  Sign In'}
             </button>
+            {/* Error Message */}
+            {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
           </form>
 
           <div className="relative">

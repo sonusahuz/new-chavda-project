@@ -1,11 +1,39 @@
 import { Button, Textarea } from '@material-tailwind/react';
 import axios from 'axios';
 import { API_URL } from '../../lib/utils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import Loading from '../../components/Spinner';
 
-const AdminProductAdd = () => {
+const AdminUpdateProductDetail = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const API = API_URL;
+  const [loading, setLoading] = useState();
+  const [product, setProduct] = useState();
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`${API_URL}/api/products/${id}`, {})
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch product details');
+        return res.json();
+      })
+      .then((product) => {
+        setProduct(product.product);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) return <Loading />;
+
+  if (!product || product.products?.length === 0) {
+    return <div className="text-center">No products found.</div>;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,13 +41,13 @@ const AdminProductAdd = () => {
     const data = Object.fromEntries(form);
 
     try {
-      await axios.post(`${API}/api/products`, data);
+      await axios.put(`${API}/api/products/${id}`, data);
       navigate('/admin/products');
     } catch (error) {
-      throw new Error(error);
+      console.error('Failed to update product:', error);
+      alert('There was an error updating the product. Please try again.');
     }
   };
-
   return (
     <div className="bg-gray-100">
       <div className="gap-6 bg-white shadow-lg rounded-lg">
@@ -108,6 +136,7 @@ const AdminProductAdd = () => {
                   <input
                     type="text"
                     id="name"
+                    defaultValue={product.Name}
                     name="Name"
                     className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -121,6 +150,7 @@ const AdminProductAdd = () => {
                       SKU
                     </label>
                     <input
+                      defaultValue={product.SKU}
                       type="text"
                       id="brand"
                       name="SKU"
@@ -135,6 +165,7 @@ const AdminProductAdd = () => {
                       Regular Price
                     </label>
                     <input
+                      defaultValue={product.RegularPrice}
                       type="text"
                       name="RegularPrice"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -150,6 +181,7 @@ const AdminProductAdd = () => {
                       Sales Price
                     </label>
                     <input
+                      defaultValue={product.SalesPrice}
                       type="text"
                       name="SalesPrice"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -163,6 +195,7 @@ const AdminProductAdd = () => {
                       Sales Price Active
                     </label>
                     <select
+                      defaultValue={product.isSalePriceActive}
                       label="Sales Price Active"
                       name="isSalePriceActive"
                       className="w-full border mt-2.5 p-2 rounded"
@@ -183,7 +216,7 @@ const AdminProductAdd = () => {
                       id="Stock"
                       name="Stock"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="300gm"
+                      defaultValue={product.Stock}
                     />
                   </div>
                   <div>
@@ -198,7 +231,7 @@ const AdminProductAdd = () => {
                       id="Tag"
                       name="Features"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="300gm"
+                      defaultValue={product.Features}
                     />
                   </div>
                   <div>
@@ -213,7 +246,7 @@ const AdminProductAdd = () => {
                       id="Tag"
                       name="Support"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="300gm"
+                      defaultValue={product.Support}
                     />
                   </div>
                   <div>
@@ -228,7 +261,7 @@ const AdminProductAdd = () => {
                       id="Tag"
                       name="Categories"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="300gm"
+                      defaultValue={product.Categories}
                     />
                   </div>
                   <div>
@@ -243,7 +276,7 @@ const AdminProductAdd = () => {
                       id="Tag"
                       name="Tags"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="300gm"
+                      defaultValue={product.Tags}
                     />
                   </div>
                 </div>
@@ -254,7 +287,11 @@ const AdminProductAdd = () => {
                   >
                     Description
                   </label>
-                  <Textarea name="Description" label="Description" />
+                  <Textarea
+                    name="Description"
+                    defaultValue={product.Description}
+                    label="Description"
+                  />
                 </div>
               </div>
             </div>
@@ -268,7 +305,7 @@ const AdminProductAdd = () => {
                   size="md"
                   className="bg-orange-700 text-white"
                 >
-                  Create
+                  Update
                 </Button>
               </div>
             </div>
@@ -279,4 +316,4 @@ const AdminProductAdd = () => {
   );
 };
 
-export default AdminProductAdd;
+export default AdminUpdateProductDetail;

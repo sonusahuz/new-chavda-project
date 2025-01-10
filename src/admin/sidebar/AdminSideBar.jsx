@@ -586,6 +586,14 @@ const AdminSidebar = () => {
                 </li>
                 <li>
                   <Link
+                    to="/admin/forgot-password"
+                    className="block hover:text-orange-500"
+                  >
+                    Forgot Password
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to="/admin/lock-screen"
                     className="block hover:text-orange-500"
                   >

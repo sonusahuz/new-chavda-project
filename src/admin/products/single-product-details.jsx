@@ -1,5 +1,29 @@
 import { Gift, Headphones, Package, Ticket } from 'lucide-react';
-const AdminProductDetail = () => {
+import { useParams } from 'react-router-dom';
+import { API_URL } from '../../lib/utils';
+import Loading from '../../components/Spinner';
+import { useEffect, useState } from 'react';
+const AdminSingleProductDetail = () => {
+  const { id } = useParams();
+  const [loading, setLoading] = useState();
+  const [product, setProduct] = useState();
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`${API_URL}/api/products/${id}`)
+      .then((res) => res.json())
+      .then((product) => {
+        console.log(product);
+        setProduct(product.product);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <Loading />;
+
+  if (!product || product.products?.length === 0) {
+    return <div className="text-center">No products found.</div>;
+  }
 
   return (
     <div>
@@ -44,10 +68,10 @@ const AdminProductDetail = () => {
             <div className="md:py-8 p-6 w-full">
               <div className="mb-2 md:mb-3">
                 <span className="mb-0.5 inline-block text-gray-500">
-                  Fancy Brand
+                  {product.Categories}
                 </span>
                 <h2 className="text-2xl font-bold text-gray-800 lg:text-3xl">
-                  Pullover with pattern
+                  {product.Name}
                 </h2>
               </div>
 
@@ -167,10 +191,10 @@ const AdminProductDetail = () => {
               <div className="mb-4">
                 <div className="flex items-end gap-2">
                   <span className="text-xl font-bold text-gray-800 md:text-2xl">
-                    $15.00
+                    ${product.RegularPrice}
                   </span>
                   <span className="mb-0.5 text-red-500 line-through">
-                    $30.00
+                    ${product.SalesPrice}
                   </span>
                 </div>
 
@@ -223,15 +247,7 @@ const AdminProductDetail = () => {
                   Description:
                 </div>
 
-                <p className="text-gray-500">
-                  This is a section of some simple filler text, also known as
-                  placeholder text. It shares some characteristics of a real
-                  written text but is random or otherwise generated. It may be
-                  used to display a sample of fonts or generate text for
-                  testing. This is a section of some simple filler text, also
-                  known as placeholder text. It shares some characteristics of a
-                  real written text but is random or otherwise generated.
-                </p>
+                <p className="text-gray-500">{product.Description}</p>
               </div>
             </div>
           </div>
@@ -432,4 +448,4 @@ const AdminProductDetail = () => {
   );
 };
 
-export default AdminProductDetail;
+export default AdminSingleProductDetail;

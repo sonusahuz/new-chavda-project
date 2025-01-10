@@ -9,6 +9,8 @@ const Cart = () => {
     fetchCart(); // Load cart items when component mounts
   }, [fetchCart]);
 
+  console.log(cartItems);
+
   const handleIncrease = (productId, currentQuantity) => {
     updateCartItem(productId, currentQuantity + 1);
   };
@@ -76,7 +78,7 @@ const Cart = () => {
                       <div className="flex items-center gap-4">
                         <button
                           className="text-indigo-500 hover:text-indigo-600"
-                          onClick={() => handleRemove(item.Product.productId)}
+                          onClick={() => handleRemove(item.productId)}
                         >
                           Remove
                         </button>

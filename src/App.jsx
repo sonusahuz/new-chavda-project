@@ -53,6 +53,9 @@ import ForgotPassword from './pages/ForgotPassword';
 import Wishlist from './pages/Wishlist';
 import ProtectedRoute from './auth/ProtectedRoute';
 import ResetPassword from './pages/ResetPassword';
+import AdminForgotPassword from './admin/authentication/forgot-password';
+import AdminSingleProductDetail from './admin/products/single-product-details';
+import AdminUpdateProductDetail from './admin/products/update-product-detail';
 
 const App = () => {
   const location = useLocation();
@@ -119,6 +122,18 @@ const App = () => {
           {/* product  */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/product-list" element={<AdminProductList />} />
+          <Route
+            path="/admin/product/detail/:id"
+            element={<AdminSingleProductDetail />}
+          />
+          <Route
+            path="/admin/product/edit/:id"
+            element={<AdminUpdateProductDetail />}
+          />
+          <Route
+            path="/admin/forgot-password"
+            element={<AdminForgotPassword />}
+          />
           <Route
             path="/admin/product-details"
             element={<AdminProductDetail />}

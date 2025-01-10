@@ -1,10 +1,29 @@
 import { Button, Textarea } from '@material-tailwind/react';
+import axios from 'axios';
+import { API_URL } from '../../lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 const AdminProductEdit = () => {
+  const navigate = useNavigate();
+  const API = API_URL;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const data = Object.fromEntries(form);
+
+    try {
+      await axios.post(`${API}/api/products`, data);
+      navigate('/admin/products');
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   return (
     <div className="bg-gray-100">
       <div className="gap-6 bg-white shadow-lg rounded-lg">
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-startc">
           <div className="p-6 border-r border-gray-200 w-[500px]">
             <img
               src="https://via.placeholder.com/150"
@@ -47,7 +66,7 @@ const AdminProductEdit = () => {
           </div>
 
           {/* Middle Section: Add Product Photo */}
-          <div className="p-6 w-full">
+          <form onSubmit={handleSubmit} className="p-6 w-full">
             <h2 className="text-lg font-bold mb-4">Add Product Photo</h2>
             <div className="border-2 w-full border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center text-gray-500">
               <svg
@@ -78,7 +97,7 @@ const AdminProductEdit = () => {
             {/* Right Section: Product Information */}
             <div className="mt-4">
               <h2 className="text-lg font-bold mb-4">Product Information</h2>
-              <form className="space-y-4">
+              <div className="space-y-4">
                 <div>
                   <label
                     htmlFor="productName"
@@ -88,9 +107,9 @@ const AdminProductEdit = () => {
                   </label>
                   <input
                     type="text"
-                    id="productName"
+                    id="name"
+                    name="Name"
                     className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    defaultValue="Men Black Slim Fit T-shirt"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -99,13 +118,13 @@ const AdminProductEdit = () => {
                       htmlFor="brand"
                       className="block text-gray-700 font-medium"
                     >
-                      Brand
+                      SKU
                     </label>
                     <input
                       type="text"
                       id="brand"
+                      name="SKU"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="Larkon Fashion"
                     />
                   </div>
                   <div>
@@ -113,13 +132,12 @@ const AdminProductEdit = () => {
                       htmlFor="weight"
                       className="block text-gray-700 font-medium"
                     >
-                      Weight
+                      Regular Price
                     </label>
                     <input
                       type="text"
-                      id="weight"
+                      name="RegularPrice"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="300gm"
                     />
                   </div>
                 </div>
@@ -129,31 +147,29 @@ const AdminProductEdit = () => {
                       htmlFor="category"
                       className="block text-gray-700 font-medium"
                     >
-                      Product Categories
+                      Sales Price
                     </label>
-                    <select
-                      id="category"
+                    <input
+                      type="text"
+                      name="SalesPrice"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="Fashion"
-                    >
-                      <option>Fashion</option>
-                      <option>Electronics</option>
-                      <option>Home</option>
-                    </select>
+                    />
                   </div>
                   <div>
                     <label
                       htmlFor="Tag Number"
                       className="block text-gray-700 font-medium"
                     >
-                      Tag Number
+                      Sales Price Active
                     </label>
-                    <input
-                      type="text"
-                      id="Tag Number"
-                      className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="300gm"
-                    />
+                    <select
+                      label="Sales Price Active"
+                      name="isSalePriceActive"
+                      className="w-full border mt-2.5 p-2 rounded"
+                    >
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
                   </div>
                   <div>
                     <label
@@ -165,6 +181,52 @@ const AdminProductEdit = () => {
                     <input
                       type="text"
                       id="Stock"
+                      name="Stock"
+                      className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      defaultValue="300gm"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="Tag"
+                      className="block text-gray-700 font-medium"
+                    >
+                      Features
+                    </label>
+                    <input
+                      type="text"
+                      id="Tag"
+                      name="Features"
+                      className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      defaultValue="300gm"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="Support"
+                      className="block text-gray-700 font-medium"
+                    >
+                      Support
+                    </label>
+                    <input
+                      type="text"
+                      id="Tag"
+                      name="Support"
+                      className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      defaultValue="300gm"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="Tag"
+                      className="block text-gray-700 font-medium"
+                    >
+                      Categories
+                    </label>
+                    <input
+                      type="text"
+                      id="Tag"
+                      name="Categories"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       defaultValue="300gm"
                     />
@@ -179,27 +241,10 @@ const AdminProductEdit = () => {
                     <input
                       type="text"
                       id="Tag"
+                      name="Tags"
                       className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       defaultValue="300gm"
                     />
-                  </div>
-
-                  <div className="w-full">
-                    <label
-                      htmlFor="gender"
-                      className="block text-gray-700 font-medium"
-                    >
-                      Gender
-                    </label>
-                    <select
-                      id="gender"
-                      className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="Men"
-                    >
-                      <option>Men</option>
-                      <option>Women</option>
-                      <option>Unisex</option>
-                    </select>
                   </div>
                 </div>
                 <div className="w-full">
@@ -209,68 +254,25 @@ const AdminProductEdit = () => {
                   >
                     Description
                   </label>
-                  <Textarea label="Description" />
-                </div>
-              </form>
-            </div>
-            <div className="">
-              <h2 className="text-lg font-bold mt-6 mb-5">Pricing Details</h2>
-              <div className="flex items-center space-x-4 justify-between">
-                <div>
-                  <label
-                    htmlFor="Price"
-                    className="block text-gray-700 font-medium"
-                  >
-                    Price
-                  </label>
-                  <input
-                    type="text"
-                    id="Price"
-                    className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    defaultValue="300"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="Discount"
-                    className="block text-gray-700 font-medium"
-                  >
-                    Discount
-                  </label>
-                  <input
-                    type="text"
-                    id="Discount"
-                    className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    defaultValue="30"
-                  />
-                </div>{' '}
-                <div>
-                  <label
-                    htmlFor="Tex"
-                    className="block text-gray-700 font-medium"
-                  >
-                    Tex
-                  </label>
-                  <input
-                    type="text"
-                    id="Tex"
-                    className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    defaultValue="3"
-                  />
+                  <Textarea name="Description" label="Description" />
                 </div>
               </div>
             </div>
-            <div className='mt-10 flex items-center justify-end'>
-              <div className='space-x-4'>
-                <Button variant="outlined" size="md">
+            <div className="mt-10 flex items-center justify-end">
+              <div className="space-x-4">
+                <Button type="reset" variant="outlined" size="md">
                   Reset
                 </Button>
-                <Button size="md" className="bg-orange-700 text-white">
-                  Save
+                <Button
+                  type="submit"
+                  size="md"
+                  className="bg-orange-700 text-white"
+                >
+                  Create
                 </Button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

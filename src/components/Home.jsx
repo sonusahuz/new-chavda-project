@@ -136,18 +136,18 @@ export default function Home() {
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-semibold">New Arrivals</h2>
-              <div className="flex gap-2">
+              <div className="flex gap-2 mr-4">
                 <Button
                   variant="outlined"
-                  size="md"
+                  size="sm"
                   onClick={handlePrev}
                   disabled={currentIndex === 0}
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <Button
-                  variant="outline"
-                  size="icon"
+                  variant="outlined"
+                  size="sm"
                   onClick={handleNext}
                   disabled={currentIndex + 4 >= data.products?.length}
                 >
@@ -240,7 +240,7 @@ export default function Home() {
                       New products with updated stocks.
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mr-4">
                     <Button
                       variant="outlined"
                       size="sm"

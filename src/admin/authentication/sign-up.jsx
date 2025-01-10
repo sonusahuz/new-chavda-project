@@ -1,55 +1,19 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useAdminAuthStore } from '../adminStore/adminAuthStore';
 
 export default function AdminSignUp() {
   const navigate = useNavigate();
-  const REGISTER_API = import.meta.env.VITE_API_BASE_URL;
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const { loading, error, register } = useAdminAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccessMessage(null);
 
-    // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await axios.post(`${REGISTER_API}/api/admin/register`, {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
-      setSuccessMessage(response.data.message);
-      setFormData({ name: '', email: '', password: '', confirmPassword: '' });
-      navigate('/login');
-      alert('User registered successfully');
-    } catch (err) {
-      setError(err.response?.data?.error || 'Something went wrong');
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
+    const form = new FormData(e.target);
+    const data = Object.fromEntries(form);
+    await register(data);
+    navigate('/admin/sign-in');
+    alert('User registered successfully');
   };
 
   return (
@@ -83,8 +47,6 @@ export default function AdminSignUp() {
                 name="name"
                 type="name"
                 placeholder="Enter your name"
-                onChange={handleChange}
-                value={formData.name}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
@@ -100,8 +62,6 @@ export default function AdminSignUp() {
                 name="email"
                 type="email"
                 placeholder="Enter your email"
-                onChange={handleChange}
-                value={formData.email}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
@@ -125,8 +85,6 @@ export default function AdminSignUp() {
                 id="password"
                 name="password"
                 type="password"
-                onChange={handleChange}
-                value={formData.password}
                 placeholder="Enter your password"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
@@ -144,8 +102,6 @@ export default function AdminSignUp() {
                 name="confirmPassword"
                 type="password"
                 placeholder="Enter your confirm password"
-                onChange={handleChange}
-                value={formData.confirmPassword}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
@@ -170,9 +126,6 @@ export default function AdminSignUp() {
             </button>
             <div className="flex items-center flex-col mx-auto mt-3">
               {error && <p className="text-red-500 text-sm">{error}</p>}
-              {successMessage && (
-                <p className="text-green-500 text-sm">{successMessage}</p>
-              )}
             </div>
           </form>
 
