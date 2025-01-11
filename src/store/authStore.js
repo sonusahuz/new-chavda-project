@@ -43,6 +43,7 @@ export const useAuthStore = create((set) => ({
         email,
         password,
       });
+      console.log(response);
       const { token, name } = response.data.details;
 
       // Save token in cookies

@@ -1,4 +1,3 @@
-import { Option, Select } from '@material-tailwind/react';
 import { Link } from 'react-router-dom';
 
 const links = [
@@ -18,13 +17,13 @@ function SubMenu() {
         <div className="flex justify-between">
           <div className="flex space-x-7">
             <div className="hidden md:flex items-center space-x-1">
-              <Select label="BROWSE CATEGORIES" className="text-white">
-                <Option value="electronics">Power Tools</Option>
-                <Option value="clothing">Catering & Commercial</Option>
-                <Option value="books">Electrical Equipment</Option>
-                <Option value="home">Hand Tools</Option>
-                <Option value="home">Electronics</Option>
-              </Select>
+              <select label="BROWSE CATEGORIES" className="p-2.5 border">
+                <option value="electronics">Power Tools</option>
+                <option value="clothing">Catering & Commercial</option>
+                <option value="books">Electrical Equipment</option>
+                <option value="home">Hand Tools</option>
+                <option value="home">Electronics</option>
+              </select>
 
               {links.map((item) => (
                 <Link

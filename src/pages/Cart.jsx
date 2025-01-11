@@ -1,15 +1,40 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Button, Card, Input } from '@material-tailwind/react';
+import { MinusIcon, PlusIcon, ShoppingCart, TrashIcon } from 'lucide-react';
 import useCartStore from '../store/cartStore';
 
-const Cart = () => {
+export default function CartPage() {
   const { cartItems, fetchCart, updateCartItem, removeFromCart, clearCart } =
     useCartStore();
+
+  const [promoCode, setPromoCode] = useState('');
+  const [subtotal, setSubtotal] = useState(0);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     fetchCart(); // Load cart items when component mounts
   }, [fetchCart]);
 
-  console.log(cartItems);
+  useEffect(() => {
+    // Calculate subtotal, VAT, and total
+    const calculatedSubtotal = cartItems.reduce(
+      (total, item) => total + item.Product.RegularPrice * item.quantity,
+      0
+    );
+    const calculatedVat = calculatedSubtotal * 0.15; // 15% VAT
+    setSubtotal(calculatedSubtotal);
+    setTotal(calculatedSubtotal + calculatedVat);
+  }, [cartItems]);
+
+  const handlePromoCodeApply = () => {
+    // Example: Apply a promo code discount
+    if (promoCode === 'DISCOUNT10') {
+      const discount = subtotal * 0.1; // 10% discount
+      setTotal(total - discount);
+    } else {
+      alert('Invalid promo code');
+    }
+  };
 
   const handleIncrease = (productId, currentQuantity) => {
     updateCartItem(productId, currentQuantity + 1);
@@ -29,118 +54,157 @@ const Cart = () => {
     clearCart();
   };
 
-  const calculateTotal = () => {
-    return cartItems
-      .reduce(
-        (total, item) => total + item.Product.RegularPrice * item.quantity,
-        0
-      )
-      .toFixed(2);
-  };
-
   return (
-    <div>
-      <div className="bg-white py-6 sm:py-8 lg:py-12">
-        <div className="mx-auto max-w-screen-lg px-4 md:px-8">
-          <div className="mb-6 sm:mb-10 lg:mb-16">
-            <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">
-              Your Cart
-            </h2>
-          </div>
+    <>
+      {cartItems.length === 0 ? (
+        <div className="text-center py-10 text-2xl"> No items in cart</div>
+      ) : (
+        <>
+          {/* Header */}
+          <header className="bg-[#006400] py-16 lg:py-4 text-center">
+            <div className="flex items-center md:justify-between justify-center px-4 md:px-5 lg:px-10 xl:px-24 flex-wrap">
+              <h1 className="text-white text-5xl font-bold">CART</h1>
+              <img
+                className="h-60 hidden md:block"
+                src="./assets/images/contact/cart-image.png"
+                alt="Chavda International"
+              />
+            </div>
+          </header>
 
-          {cartItems.length > 0 ? (
-            <>
-              <div className="mb-6 flex flex-col gap-4 sm:mb-8 md:gap-6">
-                {cartItems.map((item) => (
-                  <div
-                    key={item.Product.productId}
-                    className="flex flex-wrap gap-x-4 overflow-hidden rounded-lg border sm:gap-y-4 lg:gap-6"
-                  >
-                    <div className="group relative block h-48 w-32 overflow-hidden bg-gray-100 sm:h-56 sm:w-40">
-                      <img
-                        src={item.Product.image}
-                        alt={item.Product.Name}
-                        className="h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
-                      />
-                    </div>
-
-                    <div className="flex flex-1 flex-col justify-between py-4">
-                      <div>
-                        <h3 className="mb-1 text-lg font-bold text-gray-800 lg:text-xl">
-                          {item.Product.Name}
-                        </h3>
-                        <span className="block text-gray-500">
-                          Price: ${item.Product.RegularPrice}
-                        </span>
-                        <span className="block text-gray-500">In stock</span>
+          <div className="mx-auto px-4 md:px-5 lg:px-10 xl:px-24">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <div className="pt-4">
+                <div className="text-left mb-2">
+                  <h2 className="text-2xl font-bold">Product Details</h2>
+                  <div className="w-44 h-1 bg-green-800 mb-4"></div>
+                </div>
+                <div className="space-y-4">
+                  {cartItems.map((item) => (
+                    <Card key={item.id} className="p-4">
+                      <div className="flex gap-4 flex-wrap">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          width={100}
+                          height={100}
+                          className="rounded-lg"
+                        />
+                        <div className="flex-1 space-y-2">
+                          <h3 className="font-medium">{item.Product.Name}</h3>
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg font-bold">
+                              ₹ {item.Product.RegularPrice}
+                            </span>
+                            <span className="text-sm text-green-600">
+                              FREE DELIVERY : Orders Above R1000
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outlined"
+                              size="sm"
+                              onClick={() =>
+                                handleDecrease(item.productId, item.quantity)
+                              }
+                            >
+                              <MinusIcon className="h-4 w-4" />
+                            </Button>
+                            <span className="w-8 text-center">
+                              {item.quantity}
+                            </span>
+                            <Button
+                              variant="outlined"
+                              size="sm"
+                              onClick={() =>
+                                handleIncrease(item.productId, item.quantity)
+                              }
+                            >
+                              <PlusIcon className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              size="sm"
+                              className="text-red-500 hover:text-red-600"
+                              onClick={() => handleRemove(item.productId)}
+                            >
+                              Remove Item
+                            </Button>
+                          </div>
+                        </div>
                       </div>
-
-                      <div className="flex items-center gap-4">
-                        <button
-                          className="text-indigo-500 hover:text-indigo-600"
-                          onClick={() => handleRemove(item.productId)}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="flex w-full justify-between border-t p-4 sm:w-auto sm:border-none sm:pl-0 lg:p-6 lg:pl-0">
-                      <div className="flex items-center gap-2">
-                        <button
-                          className="p-2 bg-gray-200 hover:bg-gray-300 rounded"
-                          onClick={() =>
-                            handleDecrease(item.productId, item.quantity)
-                          }
-                        >
-                          -
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button
-                          className="p-2 bg-gray-200 hover:bg-gray-300 rounded"
-                          onClick={() =>
-                            handleIncrease(item.productId, item.quantity)
-                          }
-                        >
-                          +
-                        </button>
-                      </div>
-                      <span className="font-bold">
-                        $
-                        {(item.Product.RegularPrice * item.quantity).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                    </Card>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex flex-col items-end gap-4">
-                <div className="w-full rounded-lg bg-gray-100 p-4 sm:max-w-xs">
-                  <div className="flex justify-between gap-4 text-gray-500">
-                    <span>Total</span>
-                    <span>${calculateTotal()}</span>
+              <div className="bg-blue-100 pt-4">
+                <div className="text-center mx-auto mb-2">
+                  <h2 className="text-2xl font-bold">Order Summary</h2>
+                  <div className="w-44 h-1 bg-green-800 mx-auto mb-4"></div>
+                </div>
+                <div className="p-4">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-bold mb-2 bg-green-600 text-white p-2">
+                        PROMO CODE
+                      </h3>
+                      <Input
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)}
+                        placeholder="Enter promo code"
+                        className="w-full bg-white text-black"
+                      />
+                      <Button
+                        className="mt-2"
+                        onClick={handlePromoCodeApply}
+                        disabled={!promoCode}
+                      >
+                        Apply
+                      </Button>
+                    </div>
+
+                    <div className="bg-green-100 p-4 rounded-lg space-y-2">
+                      <div className="flex justify-between">
+                        <span>Subtotal</span>
+                        <span>₹{subtotal.toFixed(2)}</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <h3 className="font-medium">
+                        National Shipping - Delivers to Gauteng, South Africa
+                      </h3>
+                    </div>
+
+                    <div className="pt-4 border-t">
+                      <div className="flex justify-between text-xl font-bold">
+                        <span>Total</span>
+                        <span>₹{total.toFixed(2)}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-center w-full flex-col md:flex-row gap-5">
+                      <Button
+                        size="sm"
+                        className="rounded-lg w-full bg-red-500 px-8 py-3 h-12 text-white hover:bg-red-600 flex items-center justify-center gap-4"
+                        onClick={handleClearCart}
+                      >
+                        <TrashIcon className="mr-2 h-5 w-5" />
+                        Clear Cart
+                      </Button>
+                      <Button className="font-bold w-full text-center h-12 bg-green-600 hover:bg-green-700 flex items-center justify-center gap-4 text-white">
+                        <ShoppingCart className="ml-2 h-6 w-6" />
+                        CHECKOUT
+                      </Button>
+                    </div>
                   </div>
                 </div>
-
-                <button
-                  className="rounded-lg bg-red-500 px-8 py-3 text-white hover:bg-red-600"
-                  onClick={handleClearCart}
-                >
-                  Clear Cart
-                </button>
-
-                <button className="rounded-lg bg-indigo-500 px-8 py-3 text-white hover:bg-indigo-600">
-                  Checkout
-                </button>
               </div>
-            </>
-          ) : (
-            <p className="text-center text-gray-600">Your cart is empty.</p>
-          )}
-        </div>
-      </div>
-    </div>
+            </div>
+          </div>
+        </>
+      )}
+    </>
   );
-};
-
-export default Cart;
+}

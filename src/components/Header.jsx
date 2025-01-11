@@ -18,7 +18,7 @@ import { handleNavigation } from '../lib/utils';
 import { useState } from 'react';
 import { Bell, ShoppingCart } from 'lucide-react';
 import { Drawer } from './Drawer';
-import { Button, Option, Select } from '@material-tailwind/react';
+import { Button } from '@material-tailwind/react';
 import { useAuthStore } from '../store/authStore';
 import useCartStore from '../store/cartStore';
 import useWishlistStore from '../store/wishlistStore';
@@ -205,21 +205,21 @@ export default function Header() {
                   className="w-full border 2xl:w-full px-4 text-sm outline-none border-none focus:ring-0 focus:outline-none"
                   type="text"
                 />
-                <Select
+                <select
                   label="Category"
                   size="md"
-                  className=" rounded-none w-full p-2"
+                  className=" rounded-none w-full p-2 border"
                 >
-                  <Option value="electronics">Electronics</Option>
-                  <Option value="clothing">Clothing</Option>
-                  <Option value="books">Books</Option>
-                  <Option value="home">Home & Garden</Option>
-                </Select>
+                  <option value="electronics">Electronics</option>
+                  <option value="clothing">Clothing</option>
+                  <option value="books">Books</option>
+                  <option value="home">Home & Garden</option>
+                </select>
 
                 <Button
                   variant="outlined"
                   size="sm"
-                  className="shrink-0 border-0 rounded-none hover:bg-none mr-1"
+                  className="shrink-0 border-0 rounded-none hover:bg-none mr-1 focus:border-none focus:ring-0"
                 >
                   <Search className="h-5 w-5" />
                   <span className="sr-only">Search</span>

@@ -13,7 +13,6 @@ import SharpenningService from './pages/SharpeningService';
 import DashBoard from './pages/DashBoard';
 import ContactPage from './pages/Contact';
 import ScheduleMeeting from './pages/ScheduleMeeting';
-import CartPage from './pages/Cart';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Shop from './pages/Shop';
 import CategoryPage from './pages/CategoryPage';
@@ -56,6 +55,7 @@ import ResetPassword from './pages/ResetPassword';
 import AdminForgotPassword from './admin/authentication/forgot-password';
 import AdminSingleProductDetail from './admin/products/single-product-details';
 import AdminUpdateProductDetail from './admin/products/update-product-detail';
+import CartPage from './pages/Cart';
 
 const App = () => {
   const location = useLocation();
